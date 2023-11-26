@@ -19,6 +19,7 @@
     - 인천광역시 도로 교통량 통계 데이터
         - [크롤링 결과 다운로드](https://drive.google.com/drive/folders/11iQ2Htbu23re5zGTS-ufXz0AuBM__3Cq?usp=sharing)
         - 다음 리소스 폴더에 데이터를 복사: `./resources/IMCRTS`
+        - 가능하면 pickle 파일을 사용, 엑셀은 느림. 엑셀은 데이터 확인용으로...
 - vscode 사용을 전제로 환경이 구축되어 있음
     - 프로젝트 실행시 F5(mac에서는 ctrl+F5)로 실행 가능
 
