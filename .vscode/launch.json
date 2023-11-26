@@ -5,20 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Project",
+            "name": "IMCRTS Data Collection",
             "type": "python",
             "request": "launch",
-            "program": "nl_loader/loader.py",
+            "module": "data_loader",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "args": ["--mode", "imcrts"]
         },
         {
-            "name": "Initialize Project",
+            "name": "Sample Generation",
             "type": "python",
             "request": "launch",
-            "program": "project.py",
+            "module": "data_loader",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "args": ["--mode", "sample_generating"]
         },
         {
             "name": "Python: Current File",
