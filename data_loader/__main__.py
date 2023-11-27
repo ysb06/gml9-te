@@ -9,9 +9,12 @@ if args.mode == "train":
 elif args.mode == "sample_generating":
     import data_loader.sample
     data_loader.sample.SampleGenerator().generate()
-elif args.mode == "imcrts":
+elif args.mode == "imcrts_data":
     import data_loader.imcrts
     data_loader.imcrts.IMCRTSCollector().collect()
+elif args.mode == "imcrts_nodelink":
+    import data_loader.imcrts
+    data_loader.imcrts.IMCNodeLinkGenerator().generate()
 else:
     print(f"Unknwon Mode: {args.mode}")
 

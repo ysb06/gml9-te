@@ -1,22 +1,31 @@
 import logging
-from typing import Any, Dict, List, Optional, Tuple, Union
-import requests
-from datetime import datetime, timedelta
-import data_loader
 import os
-import pandas as pd
 import time
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Tuple
 
-logger = logging.getLogger(__name__)
+import pandas as pd
+import geopandas as gpd
+import requests
+import numpy as np
+
+import data_loader
 
 SERVICE_URL = "http://apis.data.go.kr/6280000/ICRoadVolStat/NodeLink_Trfc_DD"
-PRIVATE_ENCODED_KEY = r"5HFe89gOZkcIZ%2FZogD9zz18ZKcqBnu9nTIvf83zgORCxMx%2BSYz5RRGguMTi%2BzwrjolzlLWS%2Fz363%2F7pyEVzUgw%3D%3D"
 PRIVATE_DECODED_KEY = "5HFe89gOZkcIZ/ZogD9zz18ZKcqBnu9nTIvf83zgORCxMx+SYz5RRGguMTi+zwrjolzlLWS/z363/7pyEVzUgw=="
 MAX_ROW_COUNT = 5000
 
-OUTPUT_ROOT_PATH = os.path.join(data_loader.RESOURCE_PATH, "IMCRTS")
-if not os.path.exists(OUTPUT_ROOT_PATH):
-    os.makedirs(OUTPUT_ROOT_PATH)
+DATA_ROOT_PATH = os.path.join(data_loader.RESOURCE_PATH, "IMCRTS")
+
+NODELINK_ROOT_PATH = os.path.join(data_loader.RESOURCE_PATH, "[2023-11-13]NODELINKDATA")
+IMCRTS_PICKLE_DATA_PATH = os.path.join(DATA_ROOT_PATH, "imcrts_data.pickle")
+IMCRTS_EXCEL_DATA_PATH = os.path.join(DATA_ROOT_PATH, "imcrts_data.xlsx")
+
+
+if not os.path.exists(DATA_ROOT_PATH):
+    os.makedirs(DATA_ROOT_PATH)
+
+logger = logging.getLogger(__name__)
 
 
 class IMCRTSCollector:
@@ -60,14 +69,12 @@ class IMCRTSCollector:
 
         df = pd.DataFrame(data_list)
         logger.info(f"Total Row Count: {len(df)}")
-        data_excel_path = os.path.join(OUTPUT_ROOT_PATH, "imcrts.xlsx")
-        data_pickle_path = os.path.join(OUTPUT_ROOT_PATH, "imcrts.pickle")
         logger.info("Creating Pickle...")
-        df.to_pickle(data_pickle_path)
-        logger.info(f"{data_pickle_path} is created")
+        df.to_pickle(IMCRTS_PICKLE_DATA_PATH)
+        logger.info(f"{IMCRTS_PICKLE_DATA_PATH} is created")
         logger.info("Creating Excel...")
-        df.to_excel(data_excel_path)
-        logger.info(f"{data_excel_path} is created")
+        df.to_excel(IMCRTS_EXCEL_DATA_PATH)
+        logger.info(f"{IMCRTS_EXCEL_DATA_PATH} is created")
 
     def get_data(
         self, params: Dict[str, Any]
@@ -97,3 +104,65 @@ class IMCRTSCollector:
             print(res.text)
 
         return (res.status_code, data)
+
+
+class IMCNodeLinkGenerator:
+    def __init__(self) -> None:
+        node_file_path = os.path.join(NODELINK_ROOT_PATH, "MOCT_NODE.shp")
+        link_file_path = os.path.join(NODELINK_ROOT_PATH, "MOCT_LINK.shp")
+
+        logger.info("Loading IMCRTS...")
+        self.imcrts_data: pd.DataFrame = pd.read_pickle(IMCRTS_PICKLE_DATA_PATH)
+        logger.info("Loading Node Data")
+        self.node_data: gpd.GeoDataFrame = gpd.read_file(
+            node_file_path, encoding="cp949"
+        )
+        logger.info("Loading Link Data")
+        self.link_data: gpd.GeoDataFrame = gpd.read_file(
+            link_file_path, encoding="cp949"
+        )
+
+    def generate(self):
+        # 링크 데이터 생성
+        logger.info("Collecting Incheon Link IDs...")
+        imcrts_link_set = self.imcrts_data["linkID"].unique()
+
+        logger.info("Collecting Incheon Links...")
+        imc_link_data: gpd.GeoDataFrame = self.link_data[
+            self.link_data["LINK_ID"].isin(imcrts_link_set)
+        ]
+        imc_link_data.to_crs(epsg=4326)  # 위도, 경도 방식으로 위치 변환. 정확도 낮아짐.
+
+        link_output_pickle_path = os.path.join(DATA_ROOT_PATH, "imcrts_link.pickle")
+        link_output_excel_path = os.path.join(DATA_ROOT_PATH, "imcrts_link.xlsx")
+        link_output_shape_path = os.path.join(DATA_ROOT_PATH, "imcrts_link.shp")
+        logger.info("Saving Link Data to Pickle...")
+        imc_link_data.to_pickle(link_output_pickle_path)
+        logger.info("Saving Link Data to Excel...")
+        imc_link_data.to_excel(link_output_excel_path)
+        logger.info("Saving Link Data to Shape...")
+        imc_link_data.to_file(link_output_shape_path, encoding="utf-8")
+        logger.info("Saving Link Data Complete")
+        print(imc_link_data)
+
+        # 노드 데이터 생성
+        logger.info("Collecting Incheon Node IDs...")
+        imcrts_node_set = np.unique(imc_link_data[["F_NODE", "T_NODE"]].values.ravel())
+
+        logger.info("Collecting Incheon Nodes...")
+        imc_node_data: gpd.GeoDataFrame = self.node_data[
+            self.node_data["NODE_ID"].isin(imcrts_node_set)
+        ]
+        imc_node_data.to_crs(epsg=4326)  # 위도, 경도 방식으로 위치 변환. 정확도 낮아짐.
+
+        node_output_pickle_path = os.path.join(DATA_ROOT_PATH, "imcrts_node.pickle")
+        node_output_excel_path = os.path.join(DATA_ROOT_PATH, "imcrts_node.xlsx")
+        node_output_shape_path = os.path.join(DATA_ROOT_PATH, "imcrts_node.shp")
+        logger.info("Saving Node Data to Pickle...")
+        imc_node_data.to_pickle(node_output_pickle_path)
+        logger.info("Saving Node Data to Excel...")
+        imc_node_data.to_excel(node_output_excel_path)
+        logger.info("Saving Node Data to Shape...")
+        imc_node_data.to_file(node_output_shape_path, encoding="utf-8")
+        logger.info("Saving Node Data Complete")
+        print(imc_node_data)

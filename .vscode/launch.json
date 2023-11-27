@@ -5,22 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Incheon Node-Link Data Generation",
+            "type": "python",
+            "request": "launch",
+            "module": "data_loader",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--mode", "imcrts_nodelink"]
+        },
+        {
             "name": "IMCRTS Data Collection",
             "type": "python",
             "request": "launch",
             "module": "data_loader",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["--mode", "imcrts"]
-        },
-        {
-            "name": "Sample Generation",
-            "type": "python",
-            "request": "launch",
-            "module": "data_loader",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "args": ["--mode", "sample_generating"]
+            "args": ["--mode", "imcrts_data"]
         },
         {
             "name": "Python: Current File",
