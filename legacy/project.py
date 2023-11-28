@@ -1,3 +1,6 @@
+# 코드 처음 접하는 분을 위한 프로젝트 자동 설정 스크립트
+# 시간 많이 걸리고 테스트 용 코드로 사용되다 폐기
+
 import argparse
 import requests
 import logging

@@ -1,3 +1,6 @@
+# 예전 생성한 인천광역시 노드의 위치를 추출하기 위한 코드, ID 앞자리 세자리가 위치 코드이다.
+# QGIS에서 쉽게 필터링해서 추출할 수 있어서 폐기
+
 import os
 import data_loader
 import geopandas as gpd

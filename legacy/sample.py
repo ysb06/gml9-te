@@ -1,3 +1,6 @@
+# 표준노드링크가 데이터 크기가 너무 커서 로드 시간이 오래 걸려서 분석을 위한 샘플만 추출하는 코드
+# imc_nodelink로 샘플을 대체 후 폐기
+
 import logging
 import geopandas as gpd
 import os
