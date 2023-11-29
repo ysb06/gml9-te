@@ -29,6 +29,10 @@ logger = logging.getLogger(__name__)
 
 
 class IMCRTSCollector:
+    """
+    Data.go.kr로부터 인천 도로 교통량 데이터를 특정 날짜 기간만큼 추출하고 저장
+    """
+
     def __init__(
         self, start_date: str = "20230101", end_date: str = "20231125"
     ) -> None:
@@ -43,6 +47,9 @@ class IMCRTSCollector:
         self.end_date: datetime = datetime.strptime(end_date, "%Y%m%d")
 
     def collect(self) -> None:
+        """
+        데이터를 수집하고 Pandas DataFrame형태로 변환 후 Pickle 및 Excel형태로 저장
+        """
         data_list = []
         current_date: datetime = self.start_date
 
@@ -107,6 +114,10 @@ class IMCRTSCollector:
 
 
 class IMCNodeLinkGenerator:
+    """
+    표준노드링크로부터 인천 도로 교통량 데이터에서 사용되는 링크와 노드 정보만 별도로 추출
+    """
+
     def __init__(self) -> None:
         node_file_path = os.path.join(NODELINK_ROOT_PATH, "MOCT_NODE.shp")
         link_file_path = os.path.join(NODELINK_ROOT_PATH, "MOCT_LINK.shp")
@@ -123,6 +134,9 @@ class IMCNodeLinkGenerator:
         )
 
     def generate(self):
+        """
+        표준노드링크로부터 IMCRTS 데이터에서 사용되는 링크만 추출하고 이를 바탕으로 링크에 연결된 노드만 추출. 추출된 링크와 노드를 저장
+        """
         # 링크 데이터 생성
         logger.info("Collecting Incheon Link IDs...")
         imcrts_link_set = self.imcrts_data["linkID"].unique()
