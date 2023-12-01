@@ -9,15 +9,15 @@ import geopandas as gpd
 import requests
 import numpy as np
 
-import data_loader
+import imc_data
 
 SERVICE_URL = "http://apis.data.go.kr/6280000/ICRoadVolStat/NodeLink_Trfc_DD"
 PRIVATE_DECODED_KEY = "5HFe89gOZkcIZ/ZogD9zz18ZKcqBnu9nTIvf83zgORCxMx+SYz5RRGguMTi+zwrjolzlLWS/z363/7pyEVzUgw=="
 MAX_ROW_COUNT = 5000
 
-DATA_ROOT_PATH = os.path.join(data_loader.RESOURCE_PATH, "IMCRTS")
+DATA_ROOT_PATH = os.path.join(imc_data.RESOURCE_PATH, "IMCRTS")
 
-NODELINK_ROOT_PATH = os.path.join(data_loader.RESOURCE_PATH, "[2023-11-13]NODELINKDATA")
+NODELINK_ROOT_PATH = os.path.join(imc_data.RESOURCE_PATH, "[2023-11-13]NODELINKDATA")
 IMCRTS_PICKLE_DATA_PATH = os.path.join(DATA_ROOT_PATH, "imcrts_data.pickle")
 IMCRTS_EXCEL_DATA_PATH = os.path.join(DATA_ROOT_PATH, "imcrts_data.xlsx")
 
