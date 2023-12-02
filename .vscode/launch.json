@@ -5,10 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "IMCRTS Data Converting",
+            "type": "python",
+            "request": "launch",
+            "module": "imc_data",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--mode", "imcrts_converting"]
+        },
+        {
             "name": "Incheon Node-Link Data Generation",
             "type": "python",
             "request": "launch",
-            "module": "data_loader",
+            "module": "imc_data",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": ["--mode", "imcrts_nodelink"]
@@ -17,7 +26,7 @@
             "name": "IMCRTS Data Collection",
             "type": "python",
             "request": "launch",
-            "module": "data_loader",
+            "module": "imc_data",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": ["--mode", "imcrts_data"]

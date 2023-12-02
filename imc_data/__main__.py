@@ -6,15 +6,15 @@ args = parser.parse_args()
 
 if args.mode == "train":
     print("No trainer")
-elif args.mode == "sample_generating":
-    import data_loader.sample
-    data_loader.sample.SampleGenerator().generate()
 elif args.mode == "imcrts_data":
-    import data_loader.imcrts
-    data_loader.imcrts.IMCRTSCollector().collect()
+    import imc_data.imcrts
+    imc_data.imcrts.IMCRTSCollector().collect()
 elif args.mode == "imcrts_nodelink":
-    import data_loader.imcrts
-    data_loader.imcrts.IMCNodeLinkGenerator().generate()
+    import imc_data.imcrts
+    imc_data.imcrts.IMCNodeLinkGenerator().generate()
+elif args.mode == "imcrts_converting":
+    import imc_data.converter
+    imc_data.converter.Converter().run()
 else:
     print(f"Unknwon Mode: {args.mode}")
 
