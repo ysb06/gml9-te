@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "IMCRTS-STGCN Training",
+            "type": "python",
+            "request": "launch",
+            "module": "imc_stgcn",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+        },
+        {
             "name": "IMCRTS Data Converting",
             "type": "python",
             "request": "launch",

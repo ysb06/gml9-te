@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 from sklearn.preprocessing import StandardScaler
 import tqdm
+import os
 
 import dgl
 from imc_stgcn.load_data import data_transform
@@ -25,9 +26,12 @@ class Args:
     epochs: int = 50
     num_layers: int = 9
     window: int = 144
-    sensorsfilepath: str =  "./resources/IMCRTS_Dataset/sensor_graph/graph_sensor_ids.txt"
-    disfilepath: str =      "./resources/IMCRTS_Dataset/sensor_graph/distance_imc.csv"
-    tsfilepath: str =       "./resources/IMCRTS_Dataset/imcrts_df.pickle"
+    # sensorsfilepath: str =  "./resources/IMCRTS_Dataset/sensor_graph/graph_sensor_ids.txt"
+    # disfilepath: str =      "./resources/IMCRTS_Dataset/sensor_graph/distance_imc.csv"
+    # tsfilepath: str =       "./resources/IMCRTS_Dataset/imcrts_df.pickle"
+    sensorsfilepath: str = "./resources/metr_perms/sensor_graph/graph_sensor_ids.txt"
+    disfilepath: str = "./resources/metr_perms/sensor_graph/distances_la_2012.csv"
+    tsfilepath: str = "./resources/metr_perms/metr-la.h5"
     savemodelpath: str = "stgcnwavemodel.pt"
     pred_len: int = 5
     control_str: str = "TNTSTNTST"
@@ -53,7 +57,13 @@ G = dgl.from_scipy(sp_mx)
 
 
 print("Reading Pickle...")
-df = pd.read_pickle(args.tsfilepath)
+df_format = args.tsfilepath.split(".")[-1]
+if df_format == "pickle":
+    df = pd.read_pickle(args.tsfilepath)
+elif df_format == "h5":
+    df = pd.read_hdf(args.tsfilepath)
+else:
+    raise Exception("Unknown Format")
 print("Reading Complete")
 num_samples, num_nodes = df.shape
 
