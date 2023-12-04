@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "IMCRTS Mini Data Generating",
+            "type": "python",
+            "request": "launch",
+            "module": "imc_data",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--mode", "imcrts_mini"]
+        },
+        {
             "name": "IMCRTS-STGCN Training",
             "type": "python",
             "request": "launch",

@@ -22,7 +22,11 @@ click-plugins==1.1.1
     # via fiona
 cligj==0.7.2
     # via fiona
-dgl==1.1.2.post1
+colorama==0.4.6
+    # via
+    #   click
+    #   tqdm
+dgl==1.1.2
     # via -r requirements.in
 filelock==3.13.1
     # via torch
@@ -31,8 +35,6 @@ fiona==1.9.5
 fsspec==2023.12.0
     # via torch
 geopandas==0.14.1
-    # via -r requirements.in
-h5py==3.10.0
     # via -r requirements.in
 idna==3.6
     # via requests
@@ -53,7 +55,6 @@ networkx==3.2.1
 numpy==1.26.2
     # via
     #   dgl
-    #   h5py
     #   pandas
     #   scikit-learn
     #   scipy

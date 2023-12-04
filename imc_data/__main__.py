@@ -15,6 +15,9 @@ elif args.mode == "imcrts_nodelink":
 elif args.mode == "imcrts_converting":
     import imc_data.converter
     imc_data.converter.Converter().run()
+elif args.mode == "imcrts_mini":
+    import imc_data.imcrts_mini
+    imc_data.imcrts_mini.MiniGenerator().run()
 else:
     print(f"Unknwon Mode: {args.mode}")
 

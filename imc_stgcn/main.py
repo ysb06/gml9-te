@@ -26,16 +26,16 @@ class Args:
     epochs: int = 50
     num_layers: int = 9
     window: int = 144
-    # sensorsfilepath: str =  "./resources/IMCRTS_Dataset/sensor_graph/graph_sensor_ids.txt"
-    # disfilepath: str =      "./resources/IMCRTS_Dataset/sensor_graph/distance_imc.csv"
-    # tsfilepath: str =       "./resources/IMCRTS_Dataset/imcrts_df.pickle"
-    sensorsfilepath: str = "./resources/metr_perms/sensor_graph/graph_sensor_ids.txt"
-    disfilepath: str = "./resources/metr_perms/sensor_graph/distances_la_2012.csv"
-    tsfilepath: str = "./resources/metr_perms/metr-la.h5"
+    sensorsfilepath: str =  "./resources/IMCRTS_Dataset/sensor_graph/graph_sensor_ids.txt"
+    disfilepath: str =      "./resources/IMCRTS_Dataset/sensor_graph/distance_imc.csv"
+    tsfilepath: str =       "./resources/IMCRTS_Dataset/imcrts_df.pickle"
+    # sensorsfilepath: str = "./resources/metr_perms/sensor_graph/graph_sensor_ids.txt"
+    # disfilepath: str = "./resources/metr_perms/sensor_graph/distances_la_2012.csv"
+    # tsfilepath: str = "./resources/metr_perms/metr-la.h5"
     savemodelpath: str = "stgcnwavemodel.pt"
     pred_len: int = 5
     control_str: str = "TNTSTNTST"
-
+print(os.getcwd())
 
 args = Args(channels=[1, 16, 32, 64, 32, 128])
 
