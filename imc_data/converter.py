@@ -102,6 +102,6 @@ class Converter:
             return []
         else:
             df = self.turn_info_by_is[node_id]
-            result = df[(df['ST_LINK'] == st_link_id) & (df['ED_LINK'] == ed_link_id)]
+            result: pd.DataFrame = df[(df['ST_LINK'] == st_link_id) & (df['ED_LINK'] == ed_link_id)]
 
             return result['TURN_TYPE'].tolist()
