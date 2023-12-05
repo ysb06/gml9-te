@@ -4,3 +4,5 @@ geopandas
 torch
 torchvision
 torchaudio
+tables
+openpyxl

@@ -1,5 +1,4 @@
-# import imc_stgcn.main
-import numpy as np
+import pandas as pd
 
-a = np.load('./resources/PEMS08.npz')
-print(a['data'])
+a: pd.DataFrame = pd.read_pickle("./resources/IMCRTS_Mini/imcrts_data.pickle")
+a.to_hdf("./resources/IMCRTS_Mini/imcrts_data_sample.h5", key="imc")
