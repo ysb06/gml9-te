@@ -163,5 +163,6 @@ resources/*/*
 !resources/*/README*
 
 models/
+wandb/
 
 .DS_Store

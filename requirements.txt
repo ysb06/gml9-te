@@ -8,8 +8,6 @@ anyio==4.1.0
     # via jupyter-server
 appdirs==1.4.4
     # via wandb
-appnope==0.1.3
-    # via ipykernel
 argon2-cffi==23.1.0
     # via jupyter-server
 argon2-cffi-bindings==21.2.0
@@ -53,6 +51,10 @@ click-plugins==1.1.1
     # via fiona
 cligj==0.7.2
     # via fiona
+colorama==0.4.6
+    # via
+    #   click
+    #   ipython
 comm==0.2.0
     # via
     #   ipykernel
@@ -67,8 +69,6 @@ decorator==5.1.1
     # via ipython
 defusedxml==0.7.1
     # via nbconvert
-dgl==1.1.2
-    # via -r requirements.in
 docker-pycreds==0.4.0
     # via wandb
 et-xmlfile==1.1.0
@@ -81,16 +81,12 @@ executing==2.0.1
     # via stack-data
 fastjsonschema==2.19.0
     # via nbformat
-filelock==3.13.1
-    # via torch
 fiona==1.9.5
     # via geopandas
 fonttools==4.46.0
     # via matplotlib
 fqdn==1.5.1
     # via jsonschema
-fsspec==2023.12.0
-    # via torch
 geopandas==0.14.1
     # via -r requirements.in
 gitdb==4.0.11
@@ -135,8 +131,6 @@ jinja2==3.1.2
     #   jupyterlab
     #   jupyterlab-server
     #   nbconvert
-    #   torch
-    #   torch-geometric
 joblib==1.3.2
     # via scikit-learn
 json5==0.9.14
@@ -211,8 +205,6 @@ matplotlib-inline==0.1.6
     #   ipython
 mistune==3.0.2
     # via nbconvert
-mpmath==1.3.0
-    # via sympy
 msgpack==1.0.7
     # via blosc2
 nbclient==0.9.0
@@ -230,10 +222,6 @@ ndindex==1.7
     # via blosc2
 nest-asyncio==1.5.8
     # via ipykernel
-networkx==3.2.1
-    # via
-    #   dgl
-    #   torch
 notebook==7.0.6
     # via jupyter
 notebook-shim==0.2.3
@@ -246,7 +234,6 @@ numpy==1.26.2
     # via
     #   blosc2
     #   contourpy
-    #   dgl
     #   matplotlib
     #   numexpr
     #   pandas
@@ -255,8 +242,6 @@ numpy==1.26.2
     #   seaborn
     #   shapely
     #   tables
-    #   torch-geometric
-    #   torchvision
 openpyxl==3.1.2
     # via -r requirements.in
 overrides==7.4.0
@@ -281,12 +266,8 @@ pandocfilters==1.5.0
     # via nbconvert
 parso==0.8.3
     # via jedi
-pexpect==4.9.0
-    # via ipython
 pillow==10.1.0
-    # via
-    #   matplotlib
-    #   torchvision
+    # via matplotlib
 platformdirs==4.1.0
     # via jupyter-core
 prometheus-client==0.19.0
@@ -299,14 +280,8 @@ protobuf==4.25.1
     # via wandb
 psutil==5.9.6
     # via
-    #   dgl
     #   ipykernel
-    #   torch-geometric
     #   wandb
-ptyprocess==0.7.0
-    # via
-    #   pexpect
-    #   terminado
 pure-eval==0.2.2
     # via stack-data
 py-cpuinfo==9.0.0
@@ -322,14 +297,12 @@ pygments==2.17.2
     #   nbconvert
     #   qtconsole
 pyparsing==3.1.1
-    # via
-    #   matplotlib
-    #   torch-geometric
+    # via matplotlib
 pyproj==3.6.1
     # via geopandas
 pyqt5==5.15.10
     # via -r requirements.in
-pyqt5-qt5==5.15.11
+pyqt5-qt5==5.15.2
     # via pyqt5
 pyqt5-sip==12.13.0
     # via pyqt5
@@ -343,6 +316,13 @@ python-json-logger==2.0.7
     # via jupyter-events
 pytz==2023.3.post1
     # via pandas
+pywin32==306
+    # via jupyter-core
+pywinpty==2.0.12
+    # via
+    #   jupyter-server
+    #   jupyter-server-terminals
+    #   terminado
 pyyaml==6.0.1
     # via
     #   jupyter-events
@@ -365,10 +345,7 @@ referencing==0.31.1
     #   jupyter-events
 requests==2.31.0
     # via
-    #   dgl
     #   jupyterlab-server
-    #   torch-geometric
-    #   torchvision
     #   wandb
 rfc3339-validator==0.1.4
     # via
@@ -383,14 +360,9 @@ rpds-py==0.13.2
     #   jsonschema
     #   referencing
 scikit-learn==1.3.2
-    # via
-    #   -r requirements.in
-    #   torch-geometric
+    # via -r requirements.in
 scipy==1.11.4
-    # via
-    #   dgl
-    #   scikit-learn
-    #   torch-geometric
+    # via scikit-learn
 seaborn==0.13.0
     # via -r requirements.in
 send2trash==1.8.2
@@ -417,8 +389,6 @@ soupsieve==2.5
     # via beautifulsoup4
 stack-data==0.6.3
     # via ipython
-sympy==1.12
-    # via torch
 tables==3.9.2
     # via -r requirements.in
 terminado==0.18.0
@@ -431,17 +401,6 @@ tinycss2==1.2.1
     # via nbconvert
 tomli==2.0.1
     # via jupyterlab
-torch==2.1.1
-    # via
-    #   -r requirements.in
-    #   torchaudio
-    #   torchvision
-torch-geometric==2.4.0
-    # via -r requirements.in
-torchaudio==2.1.1
-    # via -r requirements.in
-torchvision==0.16.1
-    # via -r requirements.in
 tornado==6.4
     # via
     #   ipykernel
@@ -450,10 +409,6 @@ tornado==6.4
     #   jupyterlab
     #   notebook
     #   terminado
-tqdm==4.66.1
-    # via
-    #   dgl
-    #   torch-geometric
 traitlets==5.14.0
     # via
     #   comm
@@ -477,7 +432,6 @@ typing-extensions==4.8.0
     # via
     #   async-lru
     #   ipython
-    #   torch
     #   wandb
 tzdata==2023.3
     # via pandas

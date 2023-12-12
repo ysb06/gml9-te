@@ -22,9 +22,9 @@ class Args:
     channels: List[int]
     lr: float = 0.001
     disablecuda = True
-    batch_size: int = 50
-    epochs: int = 50
-    num_layers: int = 9
+    batch_size: int = 32
+    epochs: int = 32
+    num_layers: int = 6
     window: int = 144
     sensorsfilepath: str =  "./resources/IMCRTS_Dataset/sensor_graph/graph_sensor_ids.txt"
     disfilepath: str =      "./resources/IMCRTS_Dataset/sensor_graph/distance_imc.csv"
@@ -35,7 +35,6 @@ class Args:
     savemodelpath: str = "stgcnwavemodel.pt"
     pred_len: int = 5
     control_str: str = "TNTSTNTST"
-print(os.getcwd())
 
 args = Args(channels=[1, 16, 32, 64, 32, 128])
 

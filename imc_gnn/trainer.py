@@ -1,7 +1,7 @@
 import argparse
 import logging
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import List
 import os
 
@@ -23,7 +23,7 @@ import wandb
 
 logger = logging.getLogger(__name__)
 
-DATASET_ROOT = "./resources/metr_ic_sample/Dataset_Pruned"
+DATASET_ROOT = "./resources/metr_ic_sample/Dataset"
 DATASET_GRAPH_ROOT = os.path.join(DATASET_ROOT, "sensor_graph")
 
 
@@ -41,15 +41,20 @@ class HyperParams:
     sensorsfilepath: str = os.path.join(DATASET_GRAPH_ROOT, "graph_sensor_ids.txt")
     disfilepath: str = os.path.join(DATASET_GRAPH_ROOT, "distances_imc_2023.csv")
     tsfilepath: str = os.path.join(DATASET_ROOT, "metr-imc.h5")
-    savemodelpath: str = "231212_imc_pruned_stgcn_wave_epoch50_best.pt"
+    savemodelpath: str = "./models/231213_imc_stgcn_wave_epoch50_best.pt"
     pred_len: int = 5
     control_str: str = "TNTSTNTST"
+    info: str = "Device: Cuda, MV: fill with 0, Loss: MSELoss, Model: STGCN_WAVE, Optim: RMSprop, Scheduler: StepLR, Train-Val-Test Ratio: 7:1:2, Scaler: StandardScaler"
 
 
 class Trainer:
     def __init__(
         self, args: HyperParams = HyperParams(channels=[1, 16, 32, 64, 32, 128])
     ) -> None:
+        wandb.init(
+            project=f"STGCN_WAVE Training with {DATASET_ROOT.split('/')[-1]}",
+            config=asdict(args)
+        )
         self.args = args
         self.device = torch.device("cuda")
         with open(args.sensorsfilepath) as f:
@@ -90,7 +95,7 @@ class Trainer:
             self.optimizer, step_size=5, gamma=0.7
         )
 
-        wandb.init(project=f"STGCN_WAVE Training with {DATASET_ROOT.split('/')[-1]}")
+        
 
     def get_data_loader(self):
         n_his = self.args.window
@@ -150,6 +155,7 @@ class Trainer:
                 min_validation_loss = val_loss
                 torch.save(self.model.state_dict(), self.args.savemodelpath)
                 logger.info(f"Best Model Saved at {epoch}")
+                wandb.log({"Best Model Epoch": epoch})
             print(
                 "epoch",
                 epoch,
