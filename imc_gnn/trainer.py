@@ -102,10 +102,10 @@ class Trainer:
         train = self.ts_df[:len_train]
         val = self.ts_df[len_train : len_train + len_val]
         test = self.ts_df[len_train + len_val :]
-        scaler = StandardScaler()
-        train = scaler.fit_transform(train)
-        val = scaler.transform(val)
-        test = scaler.transform(test)
+        self.scaler = StandardScaler()
+        train = self.scaler.fit_transform(train)
+        val = self.scaler.transform(val)
+        test = self.scaler.transform(test)
         x_train, y_train = imc_gnn.load_data.data_transform(
             train, n_his, n_pred, self.device
         )
