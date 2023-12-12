@@ -8,7 +8,7 @@ logging.basicConfig(
     datefmt="%Y/%m/%d %H:%M:%S",
     level=logging.INFO,
 )
-logging.getLogger(__name__).info("Loading Program...")
+logging.getLogger(__name__).info(f"Running Module: {__name__}...")
 if not os.path.exists(RESOURCE_PATH):
     os.mkdir(RESOURCE_PATH)
 

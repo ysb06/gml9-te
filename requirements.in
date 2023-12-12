@@ -4,5 +4,10 @@ geopandas
 torch
 torchvision
 torchaudio
+torch-geometric
 tables
 openpyxl
+matplotlib
+PyQt5
+jupyter
+seaborn
