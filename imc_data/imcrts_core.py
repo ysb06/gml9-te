@@ -41,9 +41,56 @@ os.makedirs(DATASET_GRAPH_ROOT, exist_ok=True)
 
 
 def main():
-    processor = DataProcessor()
-    processor.import_all()
-    processor.export_all()
+    # processor = DataProcessor()
+    # processor.import_all()
+    # processor.export_all()
+
+    # generate_links()
+
+    pruner = GraphPruner()
+    pruner.run()
+
+
+class GraphPruner:
+    def __init__(self) -> None:
+        logger.info("Loading Node List...")
+        self.imc_node_list: IcNodeList = IcNodeList()
+        logger.info("Loading Link...")
+        self.imc_link_list: IcLinkList = IcLinkList()
+        logger.info("Loading Traffic Data...")
+        self.traffic_data: IcTrafficDataset = IcTrafficDataset()
+        logger.info("Loading IMCRTS Data...")
+        self.imcrts_data: pd.DataFrame = pd.read_pickle(IMCRTS_PICKLE_PATH)
+
+    def run(self):
+        dataset_Root = os.path.join(DATA_ROOT, "Dataset_Pruned")
+        traffic_data_path = os.path.join(dataset_Root, "metr-imc.h5")
+
+        dataset_graph_root = os.path.join(dataset_Root, "sensor_graph")
+        sensor_list_path = os.path.join(dataset_graph_root, "graph_sensor_ids.txt")
+        distance_list_path = os.path.join(dataset_graph_root, "distances_imc_2023.csv")
+        os.makedirs(dataset_graph_root, exist_ok=True)
+
+        pruned_traffic_data = IcTrafficDataset(traffic_data_path)
+        pruned_sensors = IcNodeList(sensor_list_path)
+        pruned_distances = IcLinkList(distance_list_path)
+
+        print(self.traffic_data)
+        sensor_list = self.imcrts_data["linkID"].unique()
+        sensor_set = set(sensor_list)
+        sensor_set_in_td = set(self.traffic_data.data.columns)
+        target_sensors = sensor_set & sensor_set_in_td
+        pruned_traffic_data.data = self.traffic_data.data[list(target_sensors)]
+        pruned_sensors.data = target_sensors
+        pruned_distances.data = self.imc_link_list.data[
+            self.imc_link_list.data["from"].isin(target_sensors)
+            & self.imc_link_list.data["to"].isin(target_sensors)
+        ]
+        print(pruned_distances.data)
+
+        pruned_traffic_data.export()
+        pruned_sensors.export_to_txt()
+        pruned_distances.export_to_csv()
 
 
 def generate_links():
@@ -106,6 +153,7 @@ class IcNodeList:
         self.data: Set[str] = set()
         try:
             with open(self.file_path, "r") as file:
+                logger.info(f"Load data from {path}")
                 self.data = set([str(int(item)) for item in file.readline().split(",")])
         except FileNotFoundError:
             pass
@@ -116,6 +164,7 @@ class IcNodeList:
     def export_to_txt(self):
         with open(self.file_path, "w") as file:
             file.write(",".join(sorted(self.data)))
+        logger.info(f"Sensor list is exported to {self.file_path}")
 
     @property
     def count(self):
@@ -127,10 +176,14 @@ class IcLinkList:
         self.path = path
         self.data: pd.DataFrame = pd.DataFrame()
         if os.path.exists(path):
-            self.data: pd.DataFrame = pd.read_csv(path)
+            logger.info(f"Load data from {path}")
+            self.data: pd.DataFrame = pd.read_csv(
+                path, index_col=0, dtype={"from": str, "to": str, "cost": float}
+            )
 
     def export_to_csv(self):
         self.data.to_csv(self.path)
+        logger.info(f"Distance list is exported to {self.path}")
 
     def import_from_raw(
         self,
@@ -209,10 +262,12 @@ class IcTrafficDataset:
         self.path = path
         self.data: pd.DataFrame = pd.DataFrame()
         if os.path.exists(path):
+            logger.info(f"Load data from {path}")
             self.data: pd.DataFrame = pd.read_hdf(path, index_col="index")
 
     def export(self):
         self.data.to_hdf(self.path, key="data")
+        logger.info(f"Traffic dataset is exported to {self.path}")
 
     def import_from_imcrts_data(
         self,

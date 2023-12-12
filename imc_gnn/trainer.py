@@ -19,28 +19,29 @@ import imc_gnn.model
 import tqdm
 
 import dgl
+import wandb
 
 logger = logging.getLogger(__name__)
 
-DATASET_ROOT = "./resources/metr_ic_sample/Dataset"
+DATASET_ROOT = "./resources/metr_ic_sample/Dataset_Pruned"
 DATASET_GRAPH_ROOT = os.path.join(DATASET_ROOT, "sensor_graph")
 
 
 @dataclass
 class HyperParams:
     channels: List[int]
-    lr: float = 0.001
+    lr: float = 0.0025
     disablecuda = True
     batch_size: int = 50
     epochs: int = 50
-    window: int = 24
+    window: int = 72  # 일단 3일 기준
     # 특정 시점에서 언제까지의 시간을 모델에 입력할 것인가 (Default: 144 = 60 / 5 * 12, 5분 간격 측정)
     # 1시간 간격 측정일 경우...24시간 or 12시간?
     num_layers: int = 9
     sensorsfilepath: str = os.path.join(DATASET_GRAPH_ROOT, "graph_sensor_ids.txt")
     disfilepath: str = os.path.join(DATASET_GRAPH_ROOT, "distances_imc_2023.csv")
     tsfilepath: str = os.path.join(DATASET_ROOT, "metr-imc.h5")
-    savemodelpath: str = "imc_stgcn_wave.pt"
+    savemodelpath: str = "231212_imc_pruned_stgcn_wave_epoch50_best.pt"
     pred_len: int = 5
     control_str: str = "TNTSTNTST"
 
@@ -53,9 +54,7 @@ class Trainer:
         self.device = torch.device("cpu")
         with open(args.sensorsfilepath) as f:
             sensor_ids = f.read().strip().split(",")
-        self.distance_df = pd.read_csv(
-            args.disfilepath, dtype={"from": "str", "to": "str"}
-        )
+        self.distance_df = pd.read_csv(args.disfilepath, dtype={"from": str, "to": str})
         adj_matrix = imc_gnn.sensors2graph.get_adjacency_matrix(
             self.distance_df, sensor_ids
         )
@@ -90,6 +89,8 @@ class Trainer:
         self.scheduler = torch.optim.lr_scheduler.StepLR(
             self.optimizer, step_size=5, gamma=0.7
         )
+
+        wandb.init(project=f"STGCN_WAVE Training with {DATASET_ROOT.split('/')[-1]}")
 
     def get_data_loader(self):
         n_his = self.args.window
@@ -139,8 +140,10 @@ class Trainer:
                 self.optimizer.step()
                 l_sum += l.item() * y.shape[0]
                 n += y.shape[0]
+
+                wandb.log({"train_loss": l_sum / n})
             self.scheduler.step()
-            val_loss = imc_gnn.utils.evaluate_model(
+            val_loss: float = imc_gnn.utils.evaluate_model(
                 self.model, self.loss, self.val_iter
             )
             if val_loss < min_validation_loss:
@@ -155,6 +158,7 @@ class Trainer:
                 ", validation loss:",
                 val_loss,
             )
+            wandb.log({"val_loss": val_loss})
 
         best_model = imc_gnn.model.STGCN_WAVE(
             self.args.channels,

@@ -11,3 +11,4 @@ matplotlib
 PyQt5
 jupyter
 seaborn
+wandb
