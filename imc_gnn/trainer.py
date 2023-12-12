@@ -24,6 +24,8 @@ import wandb
 logger = logging.getLogger(__name__)
 
 DATASET_ROOT = "./resources/metr_ic_sample/Dataset"
+# DATASET_ROOT = "./resources/metr_ic_sample/Dataset_Pruned"
+# DATASET_ROOT = "./resources/metr_ic/Dataset"
 DATASET_GRAPH_ROOT = os.path.join(DATASET_ROOT, "sensor_graph")
 
 
@@ -44,17 +46,26 @@ class HyperParams:
     savemodelpath: str = "./models/231213_imc_stgcn_wave_epoch50_best.pt"
     pred_len: int = 5
     control_str: str = "TNTSTNTST"
-    info: str = "Device: Cuda, MV: fill with 0, Loss: MSELoss, Model: STGCN_WAVE, Optim: RMSprop, Scheduler: StepLR, Train-Val-Test Ratio: 7:1:2, Scaler: StandardScaler"
 
 
 class Trainer:
     def __init__(
         self, args: HyperParams = HyperParams(channels=[1, 16, 32, 64, 32, 128])
     ) -> None:
-        wandb.init(
-            project=f"STGCN_WAVE Training with {DATASET_ROOT.split('/')[-1]}",
-            config=asdict(args)
-        )
+        project_name = ".".join(DATASET_ROOT.split("/")[2:])
+        logger.info(f"Project Starting...: {project_name}")
+        wandb.init(project=f"STGCN_WAVE with {project_name}", config=asdict(args))
+        wandb_info = wandb.Table(columns=["Title", "Content"])
+        wandb_info.add_data("Device", "Cuda")
+        wandb_info.add_data("MV", "fill with 0")
+        wandb_info.add_data("Loss", "MSELoss")
+        wandb_info.add_data("Model", "STGCN_WAVE")
+        wandb_info.add_data("Optim", "RMSprop")
+        wandb_info.add_data("Scheduler", "StepLR")
+        wandb_info.add_data("Train-Val-Test Ratio", "7:1:2")
+        wandb_info.add_data("Scaler", "StandardScaler")
+        wandb.log({"Info": wandb_info})
+
         self.args = args
         self.device = torch.device("cuda")
         with open(args.sensorsfilepath) as f:
@@ -95,8 +106,6 @@ class Trainer:
             self.optimizer, step_size=5, gamma=0.7
         )
 
-        
-
     def get_data_loader(self):
         n_his = self.args.window
         n_pred = self.args.pred_len
@@ -132,6 +141,7 @@ class Trainer:
         logger.info("Training...")
 
         min_validation_loss = np.inf
+        wandb_best = wandb.Table(columns=["Epoch of Best Model"])
         for epoch in range(1, self.args.epochs + 1):
             l_sum = 0.0
             n = 0
@@ -155,7 +165,7 @@ class Trainer:
                 min_validation_loss = val_loss
                 torch.save(self.model.state_dict(), self.args.savemodelpath)
                 logger.info(f"Best Model Saved at {epoch}")
-                wandb.log({"Best Model Epoch": epoch})
+                wandb_best.add_data(epoch)
             print(
                 "epoch",
                 epoch,
@@ -165,6 +175,7 @@ class Trainer:
                 val_loss,
             )
             wandb.log({"val_loss": val_loss})
+        wandb.log({"Best Model": wandb_best})
 
         best_model = imc_gnn.model.STGCN_WAVE(
             self.args.channels,
@@ -184,4 +195,11 @@ class Trainer:
         )
         print("test loss:", l, "\nMAE:", MAE, ", MAPE:", MAPE, ", RMSE:", RMSE)
         wandb.log({"test loss:": l, "MAE:": MAE, "MAPE": MAPE, "RMSE": RMSE})
+        wandb_result = wandb.Table(columns=["Title", "Value"])
+        wandb_result.add_data("test loss", l)
+        wandb_result.add_data("MAE", MAE)
+        wandb_result.add_data("MAPE", MAPE)
+        wandb_result.add_data("RMSE", RMSE)
+        wandb.log({"Result": wandb_result})
+
         wandb.finish()
