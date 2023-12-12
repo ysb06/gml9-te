@@ -51,7 +51,7 @@ class Trainer:
         self, args: HyperParams = HyperParams(channels=[1, 16, 32, 64, 32, 128])
     ) -> None:
         self.args = args
-        self.device = torch.device("cpu")
+        self.device = torch.device("cuda")
         with open(args.sensorsfilepath) as f:
             sensor_ids = f.read().strip().split(",")
         self.distance_df = pd.read_csv(args.disfilepath, dtype={"from": str, "to": str})
@@ -177,3 +177,5 @@ class Trainer:
             best_model, self.test_iter, self.scaler
         )
         print("test loss:", l, "\nMAE:", MAE, ", MAPE:", MAPE, ", RMSE:", RMSE)
+        wandb.log({"test loss:": l, "MAE:": MAE, "MAPE": MAPE, "RMSE": RMSE})
+        wandb.finish()
