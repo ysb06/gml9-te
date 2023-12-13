@@ -16,10 +16,11 @@ from shapely.geometry import LineString
 
 IMCRTS_Response = Tuple[int, Optional[List[Dict[str, Any]]]]
 
-DATA_ROOT = os.path.join(imc_data.RESOURCE_PATH, "metr_ic_sample")
+DATA_ROOT = os.path.join(imc_data.RESOURCE_PATH, "metr_ic_v2")
 STD_NODE_PATH = os.path.join(DATA_ROOT, "moct_node.shp")
 STD_LINK_PATH = os.path.join(DATA_ROOT, "moct_link.shp")
 STD_TURNINFO_PATH = os.path.join(DATA_ROOT, "TURNINFO.dbf")
+LINK_LINKER_PATH = os.path.join(DATA_ROOT, "link_linker.shp")
 
 IMCRTS_ROOT = os.path.join(DATA_ROOT, "IMCRTS")
 IMCRTS_PICKLE_PATH = os.path.join(IMCRTS_ROOT, "imcrts_data.pickle")
@@ -86,7 +87,6 @@ class GraphPruner:
             self.imc_link_list.data["from"].isin(target_sensors)
             & self.imc_link_list.data["to"].isin(target_sensors)
         ]
-        print(pruned_distances.data)
 
         pruned_traffic_data.export()
         pruned_sensors.export_to_txt()
@@ -102,15 +102,15 @@ def generate_links():
 
     lines = []
     for _, row in tqdm(links.data.iterrows(), total=links.data.shape[0]):
-        fn = str(round(row["from"]))
-        tn = str(round(row["to"]))
+        fn = row["from"]
+        tn = row["to"]
 
         line1 = std_link.loc[fn].geometry
         line2 = std_link.loc[tn].geometry
         lines.append(LineString([line1.coords[-1], line2.coords[0]]))
 
     ll = gpd.GeoDataFrame(geometry=lines)
-    ll.to_file(os.path.join(DATA_ROOT, "Linkers.shp"))
+    ll.to_file(LINK_LINKER_PATH)
 
 
 class DataProcessor:
