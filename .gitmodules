@@ -1,3 +1,6 @@
 [submodule "dgl"]
 	path = dgl
 	url = https://github.com/dmlc/dgl
+[submodule "STGM"]
+	path = STGM
+	url = https://github.com/Mouradost/STGM

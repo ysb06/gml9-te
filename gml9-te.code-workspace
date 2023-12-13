@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "STGM/src"
 		}
 	],
 	"settings": {}
