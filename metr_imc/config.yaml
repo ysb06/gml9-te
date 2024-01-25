@@ -1,0 +1,22 @@
+imcrts:
+  need_update: false
+  service_url: http://apis.data.go.kr/6280000/ICRoadVolStat/NodeLink_Trfc_DD
+  private_key_path: ./metr_imc/key
+  start_date: 2023-01-01
+  end_date: 2023-12-31
+  row_numbers: 10000
+  save_path: ./resources/metr_imc_v3/raws/imcrts
+
+metr_imc:
+  std_node_file_path: ./resources/metr_imc_v3/raws/nodelink/moct_node.shp
+  std_link_file_path: ./resources/metr_imc_v3/raws/nodelink/moct_link.shp
+  std_turn_info_file_path: ./resources/metr_imc_v3/raws/nodelink/TURNINFO.dbf
+  imcrts_data_file_path: ./resources/metr_imc_v3/raws/imcrts/imcrts_data.pickle
+
+  dataset_root_path: ./resources/metr_imc_v3/dataset
+  traffic_volume_file_path: ./metr-imc.h5
+  distance_file_path: ./sensor_graph/distances_imc_2023.csv
+  sensor_ids_file_path: ./sensor_graph/graph_sensor_ids.txt
+
+  start_date: 2023-01-01
+  end_date: 2023-12-31

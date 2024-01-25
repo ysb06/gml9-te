@@ -1,0 +1,4 @@
+test:
+  ok: true
+  no: null
+  not: asf

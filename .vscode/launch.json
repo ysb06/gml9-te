@@ -5,25 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Trainer",
-            "type": "python",
-            "request": "launch",
-            "module": "imc_gnn",
-            "console": "integratedTerminal",
-            "env": {
-                "NUMEXPR_MAX_THREADS": "10"
-            },
-        },
-        {
             "name": "Run Data Converter",
             "type": "python",
             "request": "launch",
-            "module": "imc_data",
+            "module": "metr_imc",
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "Run Trainer",
+            "type": "python",
+            "request": "launch",
+            "module": "metr_imc_trainer",
             "console": "integratedTerminal",
             "env": {
                 "NUMEXPR_MAX_THREADS": "10"
             },
-            "args": ["--module", "imcrts_core"]
         },
         {
             "name": "Python: Current File",

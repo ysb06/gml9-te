@@ -1,18 +1,18 @@
-from collections import defaultdict
 import logging
 import os
 import time
+from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import Any, DefaultDict, Dict, List, Optional, Set, Tuple, Union
 
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 import requests
-import numpy as np
-from tqdm import tqdm
-import imc_data
-
 from shapely.geometry import LineString
+from tqdm import tqdm
+
+import imc_data
 
 IMCRTS_Response = Tuple[int, Optional[List[Dict[str, Any]]]]
 

@@ -3,7 +3,7 @@ geopandas
 tables
 openpyxl
 matplotlib
-PyQt5
-jupyter
 seaborn
 wandb
+tqdm
+python-box
