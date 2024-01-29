@@ -1,4 +1,13 @@
-test:
-  ok: true
-  no: null
-  not: asf
+device: auto
+
+__subs__:
+  datasets:
+    data_folder_path: ./resources/metr_imc_v3/dataset
+    device: mps
+    __subs__:
+      split_ratio:
+        train: 7
+        val: 1
+        test: 2
+
+  models: x

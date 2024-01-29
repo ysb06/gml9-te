@@ -7,3 +7,5 @@ seaborn
 wandb
 tqdm
 python-box
+torch
+torchvision

@@ -1,10 +1,12 @@
 import argparse
 import os
 
+from . import Trainer
 from .config.loader import load_config
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--config", type=str, default="config.yaml")
+parser.add_argument("--config", type=str, default="./metr_imc_trainer/config.yaml")
 args = parser.parse_args()
 
-print(load_config(os.path.join("./metr_imc_trainer", args.config)))
+trainer = Trainer(*load_config(args.config))
+trainer.train()
