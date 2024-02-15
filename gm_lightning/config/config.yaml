@@ -1,0 +1,6 @@
+defaults:
+  - dataset: metrla
+  - model: stgcn_wave
+  - _self_
+
+device: auto

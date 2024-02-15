@@ -4,10 +4,22 @@
 #
 #    pip-compile
 #
+aiohttp==3.9.3
+    # via fsspec
+aiosignal==1.3.1
+    # via aiohttp
+antlr4-python3-runtime==4.9.3
+    # via
+    #   hydra-core
+    #   omegaconf
 appdirs==1.4.4
     # via wandb
+async-timeout==4.0.3
+    # via aiohttp
 attrs==23.1.0
-    # via fiona
+    # via
+    #   aiohttp
+    #   fiona
 blosc2==2.3.2
     # via tables
 certifi==2023.11.17
@@ -32,6 +44,8 @@ contourpy==1.2.0
     # via matplotlib
 cycler==0.12.1
     # via matplotlib
+dgl==2.0.0
+    # via -r requirements.in
 docker-pycreds==0.4.0
     # via wandb
 et-xmlfile==1.1.0
@@ -42,16 +56,27 @@ fiona==1.9.5
     # via geopandas
 fonttools==4.46.0
     # via matplotlib
-fsspec==2023.12.2
-    # via torch
+frozenlist==1.4.1
+    # via
+    #   aiohttp
+    #   aiosignal
+fsspec[http]==2023.12.2
+    # via
+    #   lightning
+    #   pytorch-lightning
+    #   torch
 geopandas==0.14.1
     # via -r requirements.in
 gitdb==4.0.11
     # via gitpython
 gitpython==3.1.40
     # via wandb
+hydra-core==1.3.2
+    # via -r requirements.in
 idna==3.6
-    # via requests
+    # via
+    #   requests
+    #   yarl
 importlib-metadata==7.0.0
     # via fiona
 importlib-resources==6.1.1
@@ -62,6 +87,13 @@ joblib==1.3.2
     # via scikit-learn
 kiwisolver==1.4.5
     # via matplotlib
+lightning==2.2.0.post0
+    # via -r requirements.in
+lightning-utilities==0.10.1
+    # via
+    #   lightning
+    #   pytorch-lightning
+    #   torchmetrics
 markupsafe==2.1.4
     # via jinja2
 matplotlib==3.8.2
@@ -72,32 +104,49 @@ mpmath==1.3.0
     # via sympy
 msgpack==1.0.7
     # via blosc2
+multidict==6.0.5
+    # via
+    #   aiohttp
+    #   yarl
 ndindex==1.7
     # via blosc2
 networkx==3.2.1
-    # via torch
+    # via
+    #   dgl
+    #   torch
 numexpr==2.8.7
     # via tables
 numpy==1.26.2
     # via
     #   blosc2
     #   contourpy
+    #   dgl
+    #   lightning
     #   matplotlib
     #   numexpr
     #   pandas
+    #   pytorch-lightning
     #   scikit-learn
     #   scipy
     #   seaborn
     #   shapely
     #   tables
+    #   torchmetrics
     #   torchvision
+omegaconf==2.3.0
+    # via hydra-core
 openpyxl==3.1.2
     # via -r requirements.in
 packaging==23.2
     # via
     #   geopandas
+    #   hydra-core
+    #   lightning
+    #   lightning-utilities
     #   matplotlib
+    #   pytorch-lightning
     #   tables
+    #   torchmetrics
 pandas==2.1.3
     # via
     #   geopandas
@@ -109,7 +158,9 @@ pillow==10.1.0
 protobuf==4.25.1
     # via wandb
 psutil==5.9.6
-    # via wandb
+    # via
+    #   dgl
+    #   wandb
 py-cpuinfo==9.0.0
     # via
     #   blosc2
@@ -124,18 +175,29 @@ python-dateutil==2.8.2
     # via
     #   matplotlib
     #   pandas
+pytorch-lightning==2.2.0.post0
+    # via lightning
 pytz==2023.3.post1
     # via pandas
 pyyaml==6.0.1
-    # via wandb
+    # via
+    #   lightning
+    #   omegaconf
+    #   pytorch-lightning
+    #   wandb
 requests==2.31.0
     # via
+    #   dgl
+    #   fsspec
+    #   torchdata
     #   torchvision
     #   wandb
 scikit-learn==1.3.2
     # via -r requirements.in
 scipy==1.11.4
-    # via scikit-learn
+    # via
+    #   dgl
+    #   scikit-learn
 seaborn==0.13.0
     # via -r requirements.in
 sentry-sdk==1.38.0
@@ -160,13 +222,30 @@ threadpoolctl==3.2.0
 torch==2.1.2
     # via
     #   -r requirements.in
+    #   lightning
+    #   pytorch-lightning
+    #   torchdata
+    #   torchmetrics
     #   torchvision
+torchdata==0.7.1
+    # via dgl
+torchmetrics==1.3.1
+    # via
+    #   lightning
+    #   pytorch-lightning
 torchvision==0.16.2
     # via -r requirements.in
 tqdm==4.66.1
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   dgl
+    #   lightning
+    #   pytorch-lightning
 typing-extensions==4.8.0
     # via
+    #   lightning
+    #   lightning-utilities
+    #   pytorch-lightning
     #   torch
     #   wandb
 tzdata==2023.3
@@ -175,8 +254,11 @@ urllib3==2.1.0
     # via
     #   requests
     #   sentry-sdk
+    #   torchdata
 wandb==0.16.1
     # via -r requirements.in
+yarl==1.9.4
+    # via aiohttp
 zipp==3.17.0
     # via
     #   importlib-metadata

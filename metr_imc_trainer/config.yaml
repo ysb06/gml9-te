@@ -3,11 +3,16 @@ device: auto
 __subs__:
   datasets:
     data_folder_path: ./resources/metr_imc_v3/dataset
-    device: mps
-    __subs__:
-      split_ratio:
-        train: 7
-        val: 1
-        test: 2
-
+    window_size: 12
+    worker_count: 1
+    r: 1.0
+    training_loader:
+      ratio: 7
+      batch_size: 64
+    validation_loader:
+      ratio: 1
+      batch_size: 128
+    validation_loader:
+      ratio: 2
+      batch_size: 128
   models: x

@@ -9,3 +9,6 @@ tqdm
 python-box
 torch
 torchvision
+hydra-core
+lightning
+dgl

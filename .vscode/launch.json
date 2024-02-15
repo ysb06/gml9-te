@@ -5,17 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Data Converter",
-            "type": "python",
-            "request": "launch",
-            "module": "metr_imc",
-            "console": "integratedTerminal",
-        },
-        {
             "name": "Run Trainer",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
-            "module": "metr_imc_trainer",
+            "module": "gm_lightning",
             "console": "integratedTerminal",
             "env": {
                 "NUMEXPR_MAX_THREADS": "10"
@@ -23,7 +16,7 @@
         },
         {
             "name": "Python: Current File",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",

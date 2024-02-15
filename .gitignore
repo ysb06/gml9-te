@@ -164,6 +164,7 @@ cython_debug/
 
 /models
 /wandb
+/outputs
 
 .DS_Store
 metr_imc/key

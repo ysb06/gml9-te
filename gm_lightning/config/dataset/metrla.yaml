@@ -1,0 +1,8 @@
+_target_: gm_lightning.datasets.metrla.MeterGraphDataset
+
+folder_path: ./resources/METRLA
+traffic_data_path: metr-la.h5
+distances_data_path: distances_la_2012.csv
+sensor_ids_path: metr_ids.txt
+
+k: 0.1  # Normalization factor for the adjacency matrix
