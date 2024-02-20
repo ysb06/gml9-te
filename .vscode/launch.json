@@ -5,7 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Trainer",
+            "name": "Run imc_stgcn",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "imc_stgcn",
+            "console": "integratedTerminal",
+            "env": {
+                "NUMEXPR_MAX_THREADS": "10"
+            },
+            "justMyCode": false
+        },
+        {
+            "name": "Run gm_lightning",
             "type": "debugpy",
             "request": "launch",
             "module": "gm_lightning",
@@ -13,6 +24,7 @@
             "env": {
                 "NUMEXPR_MAX_THREADS": "10"
             },
+            "justMyCode": false
         },
         {
             "name": "Python: Current File",

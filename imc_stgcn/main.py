@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import List
+import random
 
 import numpy as np
 import pandas as pd
@@ -17,6 +18,18 @@ from imc_stgcn.sensors2graph import get_adjacency_matrix
 from imc_stgcn.utils import evaluate_metric, evaluate_model
 
 
+def seed(seed_value, deterministic: bool = True):
+    random.seed = seed_value
+    np.random.seed = seed_value
+    torch.manual_seed(seed_value)
+    torch.cuda.manual_seed_all(seed_value)
+    if deterministic:
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+seed(42)
+
+
 @dataclass
 class Args:
     channels: List[int]
@@ -26,15 +39,16 @@ class Args:
     epochs: int = 32
     num_layers: int = 6
     window: int = 144
-    sensorsfilepath: str =  "./resources/IMCRTS_Dataset/sensor_graph/graph_sensor_ids.txt"
-    disfilepath: str =      "./resources/IMCRTS_Dataset/sensor_graph/distance_imc.csv"
-    tsfilepath: str =       "./resources/IMCRTS_Dataset/imcrts_df.pickle"
-    # sensorsfilepath: str = "./resources/metr_perms/sensor_graph/graph_sensor_ids.txt"
-    # disfilepath: str = "./resources/metr_perms/sensor_graph/distances_la_2012.csv"
-    # tsfilepath: str = "./resources/metr_perms/metr-la.h5"
+    # sensorsfilepath: str =  "./resources/IMCRTS_Dataset/sensor_graph/graph_sensor_ids.txt"
+    # disfilepath: str =      "./resources/IMCRTS_Dataset/sensor_graph/distance_imc.csv"
+    # tsfilepath: str =       "./resources/IMCRTS_Dataset/imcrts_df.pickle"
+    sensorsfilepath: str = "./resources/METRLA/metr_ids.txt"
+    disfilepath: str = "./resources/METRLA/distances_la_2012.csv"
+    tsfilepath: str = "./resources/METRLA/metr-la.h5"
     savemodelpath: str = "stgcnwavemodel.pt"
     pred_len: int = 5
     control_str: str = "TNTSTNTST"
+
 
 args = Args(channels=[1, 16, 32, 64, 32, 128])
 

@@ -3,4 +3,23 @@ defaults:
   - model: stgcn_wave
   - _self_
 
-device: auto
+device: cpu
+dataset_split:
+  training_ratio: 0.7
+  validation_ratio: 0.2
+dataloader:
+  training:
+    batch_size: 64
+    shuffle: true
+    num_workers: 9
+    persistent_workers: true
+  validation:
+    batch_size: 128
+    shuffle: false
+    num_workers: 9
+    persistent_workers: true
+trainer:
+  logger: true
+  max_epochs: 3
+  fast_dev_run: true
+seed: 42

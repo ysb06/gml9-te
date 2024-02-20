@@ -1,8 +1,8 @@
 # Model Args
 channels: [1, 16, 32, 64, 32, 128]
-window: 12
+window: 144
 dropout: 0
-num_layers: 6
+num_layers: 9
 control_str: TNTSTNTST
 
 # Optimizer Args

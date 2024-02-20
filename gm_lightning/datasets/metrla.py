@@ -3,15 +3,16 @@ import pandas as pd
 import torch
 import numpy as np
 
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, Subset
 import scipy.sparse as sp
 import dgl
 from pathlib import Path
+from sklearn.preprocessing import StandardScaler
 
 from torch import Tensor
 
 
-class MeterGraphDataset(Dataset):
+class MetrGraphDataset(Dataset):
     def __init__(
         self,
         folder_path: str,
@@ -19,12 +20,18 @@ class MeterGraphDataset(Dataset):
         distances_data_path: str,
         sensor_ids_path: str,
         k: float = 0.1,
+        prediction_length: int = 5,
+        window_size: int = 144,
     ) -> None:
+        self.window_size = window_size
+        self.prediction_length = prediction_length
+
         self.root_path = Path(folder_path)
-        self.traffic_data = pd.read_hdf(self.root_path / traffic_data_path)
+        self.raw_data = pd.read_hdf(self.root_path / traffic_data_path)
         distances_data = pd.read_csv(
             self.root_path / distances_data_path, dtype={"from": "str", "to": "str"}
         )
+
         sensor_ids = []
         with open(self.root_path / sensor_ids_path) as f:
             sensor_ids = f.read().strip().split(",")
@@ -32,19 +39,56 @@ class MeterGraphDataset(Dataset):
         sp_mx = sp.coo_matrix(adj_mx)
         self.G = dgl.from_scipy(sp_mx)
 
+        scaler = StandardScaler()
+        self.traffic_data = scaler.fit_transform(self.raw_data)
+
+        self.train_size = len(self)
+        self.val_size = 0
+
+    def split_data(
+        self, training_ratio: float, validation_ratio: float
+    ) -> Tuple[Subset, Subset, Subset]:
+        self.train_size = int(training_ratio * len(self))
+        self.val_size = int(validation_ratio * len(self))
+
+        scaler = StandardScaler()
+        scaler.fit(self.raw_data[: self.train_size])
+        self.traffic_data = scaler.transform(self.raw_data)
+
+        train_end = self.train_size
+        val_end = self.train_size + self.val_size
+        test_end = len(self.traffic_data)
+        return (
+            Subset(self, range(0, train_end)),
+            Subset(self, range(train_end, val_end)),
+            Subset(self, range(val_end, test_end)),
+        )
+
+    @property
+    def test_size(self):
+        return len(self.traffic_data) - self.train_size - self.val_size
+
     def __len__(self) -> int:
-        return len(self.data)
+        return len(self.traffic_data) - self.window_size - self.prediction_length
 
     def __getitem__(self, idx: int) -> Tuple[Tensor, Tensor]:
-        return self.x[idx], self.y[idx]
+        num_route = self.traffic_data.shape[1]
+
+        head = idx
+        tail = idx + self.window_size
+
+        x = self.traffic_data[head:tail].reshape(1, self.window_size, num_route)
+        y = self.traffic_data[tail + self.prediction_length - 1]
+
+        return torch.Tensor(x), torch.Tensor(y)
 
     @property
     def graph(self):
         return self.G
-    
+
     @property
     def sensor_count(self):
-        return len(self.G.nodes)
+        return self.G.num_nodes()
 
     def get_adjacency_matrix(
         self, distance_df: pd.DataFrame, sensor_ids: List[str], normalized_k=0.1
@@ -78,41 +122,3 @@ class MeterGraphDataset(Dataset):
         # Sets entries that lower than a threshold, i.e., k, to zero for sparsity.
         adj_mx[adj_mx < normalized_k] = 0
         return adj_mx
-
-class METRLADataset:
-    def __init__(self, file_path):
-        self.data = None
-        try:
-            self.data = pd.read_csv(file_path)
-        except FileNotFoundError:
-            print("File not found. Please provide a valid file path.")
-        
-    def __len__(self):
-        return len(self.data)
-    
-    def __getitem__(self, idx):
-        return self.data.iloc[idx]
-    
-    def data_transform(self, data, n_his, n_pred, device):
-        # produce data slices for training and testing
-        n_route = data.shape[1]
-        l = len(data)
-        num = l - n_his - n_pred
-        x = np.zeros([num, 1, n_his, n_route])
-        y = np.zeros([num, n_route])
-
-        cnt = 0
-        for i in range(l - n_his - n_pred):
-            head = i
-            tail = i + n_his
-            x[cnt, :, :, :] = data[head:tail].reshape(1, n_his, n_route)
-            y[cnt] = data[tail + n_pred - 1]
-            cnt += 1
-        return torch.Tensor(x).to(device), torch.Tensor(y).to(device)
-
-# Example usage
-# dataset = METRLADataset("path/to/dataset.csv")
-# dataset.load_data()
-# num_samples = dataset.get_num_samples()
-# num_features = dataset.get_num_features()
-# sample = dataset.get_sample(0)

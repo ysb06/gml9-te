@@ -11,4 +11,4 @@ torch
 torchvision
 hydra-core
 lightning
-dgl
+dgl -f https://data.dgl.ai/wheels/repo.html
