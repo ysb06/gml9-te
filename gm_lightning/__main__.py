@@ -7,7 +7,6 @@ from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.loggers import WandbLogger
 from torch.utils.data import DataLoader
-import wandb
 
 from gm_lightning.datasets.metrla import MetrGraphDataset
 from gm_lightning.models.lightning.stgcn_wave import STGCNWaveModel
@@ -58,11 +57,6 @@ def run(config: DictConfig) -> None:
         logger=wandb_logger,
         accelerator=device.type,
     )
-    # trainer = L.Trainer(
-    #     **config.trainer,
-    #     logger=wandb_logger,
-    #     accelerator=device.type,
-    # )
     trainer.fit(
         model,
         train_dataloaders=training_data_loader,

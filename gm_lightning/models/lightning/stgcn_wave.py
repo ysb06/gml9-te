@@ -3,7 +3,7 @@ from typing import List, Tuple
 import dgl
 import lightning as L
 import torch
-from torch import Tensor, nn
+from torch import nn
 from torch.optim import Optimizer
 
 from gm_lightning.models.torch.stgcn_wave import STGCN_WAVE
