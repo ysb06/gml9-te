@@ -19,7 +19,6 @@ dataloader:
     num_workers: 9
     persistent_workers: true
 trainer:
-  logger: true
   max_epochs: 3
   fast_dev_run: true
 seed: 42

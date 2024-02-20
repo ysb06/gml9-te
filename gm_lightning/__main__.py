@@ -1,4 +1,3 @@
-import random
 from pathlib import Path
 
 import hydra
@@ -52,13 +51,18 @@ def run(config: DictConfig) -> None:
         device=device,
     )
 
-    # wandb_logger = WandbLogger(name="METR-LA Lightning", project="STGCN_WAVE")
-    # wandb_logger.experiment.config.update(config)
-    # trainer = L.Trainer(logger=wandb_logger, max_epochs=config.epochs)
+    wandb_logger = WandbLogger(name="METR-LA Lightning", project="STGCN_WAVE")
+    wandb_logger.experiment.config.update(OmegaConf.to_container(config, resolve=True))
     trainer = L.Trainer(
         **config.trainer,
+        logger=wandb_logger,
         accelerator=device.type,
     )
+    # trainer = L.Trainer(
+    #     **config.trainer,
+    #     logger=wandb_logger,
+    #     accelerator=device.type,
+    # )
     trainer.fit(
         model,
         train_dataloaders=training_data_loader,
