@@ -34,7 +34,7 @@ SENSOR_LIST_PATH = os.path.join(DATASET_GRAPH_ROOT, "graph_sensor_ids.txt")
 DISTANCE_LIST_PATH = os.path.join(DATASET_GRAPH_ROOT, "distances_imc_2023.csv")
 LINK_INFO_PATH = os.path.join(DATA_ROOT, "Linkers.shp")
 
-PRIVATE_DECODED_KEY = "5HFe89gOZkcIZ/ZogD9zz18ZKcqBnu9nTIvf83zgORCxMx+SYz5RRGguMTi+zwrjolzlLWS/z363/7pyEVzUgw=="
+PRIVATE_DECODED_KEY = "key for data.go.kr"
 
 logger = logging.getLogger(__name__)
 os.makedirs(IMCRTS_ROOT, exist_ok=True)
@@ -42,12 +42,6 @@ os.makedirs(DATASET_GRAPH_ROOT, exist_ok=True)
 
 
 def main():
-    # processor = DataProcessor()
-    # processor.import_all()
-    # processor.export_all()
-
-    # generate_links()
-
     pruner = GraphPruner()
     pruner.run()
 

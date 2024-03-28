@@ -8,4 +8,4 @@ args = parser.parse_args()
 module = importlib.import_module(f'imc_data.{args.module}')
 module.main()
 
-print("Module Terminated")
+print("Module Terminated!")
